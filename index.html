@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIAQ - Веб-сервис креативной индустрии</title>
+    <link rel="stylesheet" href="ciaq-interactive.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #5A50E5;
+            --secondary: #FF6584;
+            --accent: #00BFA6;
+            --dark: #333333;
+            --light: #F8F9FA;
+            --gray: #EAEAEA;
+            --text: #444444;
+            --sidebar-width: 240px;
+            --sidebar-width-collapsed: 70px;
+            --header-height: 70px;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: white;
+            width: var(--sidebar-width);
+            min-height: 100vh;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            z-index: 1000;
+            padding: 1rem 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        .sidebar.collapsed {
+            width: var(--sidebar-width-collapsed);
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 32px;
+            width: auto;
+        }
+
+        .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            color: #000000;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background-color: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 0.8rem;
+        }
+
+        .sidebar.collapsed .logo-text {
+            display: none;
+        }
+
+        .toggle-btn {
+            margin-left: auto;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text);
+            transition: var(--transition);
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar.collapsed .toggle-btn {
+            transform: rotate(180deg);
+        }
+
+        .menu {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 0.5rem;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            margin: 0.2rem 0;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .menu-item:hover {
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .menu-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .menu-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.8rem;
+        }
+
+        .sidebar.collapsed .menu-text {
+            display: none;
+        }
+
+        .submenu {
+            margin-left: 2.4rem;
+            height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .submenu.open {
+            height: auto;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar.collapsed .submenu {
+            position: absolute;
+            left: var(--sidebar-width-collapsed);
+            top: 0;
+            background-color: white;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            width: 200px;
+            margin-left: 0;
+            z-index: 1000;
+            padding: 0.5rem;
+            display: none;
+        }
+
+        .sidebar.collapsed .menu-item:hover .submenu {
+            display: block;
+        }
+
+        .submenu-item {
+            padding: 0.6rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: block;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .submenu-item:hover {
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--gray);
+            margin-top: auto;
+        }
+
+        .lang-switch {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .lang-switch span {
+            margin-left: 0.5rem;
+        }
+
+        .sidebar.collapsed .lang-text {
+            display: none;
+        }
+
+        .user-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar.collapsed .user-btn span {
+            display: none;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .main-content.expanded {
+            margin-left: var(--sidebar-width-collapsed);
+            width: calc(100% - var(--sidebar-width-collapsed));
+        }
+
+        /* Header */
+        .header {
+            height: var(--header-height);
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--gray);
+            border-radius: 24px;
+            padding: 0.5rem 1rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: none;
+            outline: none;
+            width: 100%;
+            padding: 0.3rem 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .action-btn {
+            margin-left: auto;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 0.7rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            background-color: #ff4f75;
+        }
+
+        .action-btn svg {
+            margin-right: 0.5rem;
+        }
+
+        .notify-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text);
+            margin-left: 1.5rem;
+            position: relative;
+        }
+
+        .notify-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Mobile Header */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-right: 1rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 4.8rem 2rem; /* Increased from 4rem to 4.8rem (20% more) */
+            color: white;
+            text-align: center;
+            position: relative;
+            min-height: 120%; /* Adding this to make the section 20% taller */
+        }
+
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('CIAQ_Main.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15; /* 15% opacity */
+            z-index: 1;
+        }
+
+        .hero-section > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3rem; /* Increased from 2.5rem to 3rem */
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem; /* Increased from 1.2rem to 1.4rem */
+            max-width: 700px;
+            margin: 0 auto 2.4rem;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn-primary, .btn-secondary {
+            font-size: 1.1rem; /* Adding font size to buttons */
+            padding: 0.9rem 2rem; /* Increased from 0.8rem 1.8rem */
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .btn-primary {
+            background-color: white;
+            color: var(--primary);
+        }
+        
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .btn-primary:hover, .btn-secondary:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Projects Section */
+        .section {
+            padding: 3rem 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .view-options {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .view-btn {
+            background: none;
+            border: 1px solid var(--gray);
+            border-radius: var(--border-radius);
+            padding: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .view-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.7rem 1rem;
+            border: 1px solid var(--gray);
+            border-radius: var(--border-radius);
+            background-color: white;
+            min-width: 150px;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        /* List view for projects */
+        .projects-grid.list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .projects-grid.list-view .project-card {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .projects-grid.list-view .project-img {
+            height: 120px;
+            width: 120px;
+            min-width: 120px;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+        }
+
+        .projects-grid.list-view .project-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding: 1rem 1.5rem;
+        }
+
+        .projects-grid.list-view .project-title {
+            margin-top: 0.3rem;
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .project-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-img {
+            height: 180px;
+            background-color: var(--gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #999;
+        }
+
+        .project-content {
+            padding: 1.5rem;
+        }
+
+        .project-category {
+            display: inline-block;
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 24px;
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--dark);
+        }
+
+        .project-desc {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            color: #666;
+        }
+
+        .project-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .project-status {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .status-active {
+            background-color: var(--accent);
+        }
+
+        .status-development {
+            background-color: var(--secondary);
+        }
+
+        .project-more {
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* AI Chat Button */
+        .ai-chat-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .ai-chat-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Project Detail Page Styles */
+        .project-detail-container {
+            padding: 0 0 3rem 0;
+        }
+
+        .project-detail-header {
+            margin-bottom: 2rem;
+        }
+
+        .project-detail-cover {
+            height: 350px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .project-detail-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 2rem;
+            color: white;
+        }
+
+        .project-detail-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-detail-meta {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .project-detail-category {
+            background-color: rgba(108, 99, 255, 0.2);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 24px;
+            font-size: 0.9rem;
+        }
+
+        .project-detail-status {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .project-detail-actions {
+            display: flex;
+            gap: 1rem;
+            background-color: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .detail-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            background: none;
+        }
+
+        .detail-action-btn:hover {
+            background-color: var(--gray);
+        }
+
+        .detail-action-btn.favorite.active {
+            color: var(--secondary);
+        }
+
+        .detail-action-btn.invest {
+            background-color: var(--primary);
+            color: white;
+            margin-left: auto;
+        }
+
+        .detail-action-btn.invest:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .project-detail-content {
+            padding: 0 2rem;
+        }
+
+        .project-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .detail-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .detail-card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .detail-card-title {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .detail-card-body {
+            padding: 1.5rem;
+        }
+
+        .detail-card-body p {
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-detail-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .detail-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-stat-label {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-stat-value {
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--gray);
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent);
+            border-radius: 4px;
+        }
+
+        .project-detail-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            align-items: center;
+        }
+
+        .detail-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-left: auto;
+        }
+
+        .social-link {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .audience-section, .needs-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .audience-title, .needs-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 0.7rem;
+            color: var(--dark);
+        }
+
+        .team-members {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .team-member {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .team-member-photo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+        }
+
+        .team-member-info {
+            flex: 1;
+        }
+
+        .team-member-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+            color: var(--dark);
+        }
+
+        .team-member-role {
+            font-size: 0.9rem;
+            color: var(--primary);
+            margin-bottom: 0.7rem;
+        }
+
+        .team-member-bio {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #666;
+        }
+
+        .invest-cta {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .invest-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 1rem 2rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+        }
+
+        .invest-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 191, 166, 0.3);
+        }
+
+        .similar-projects-section {
+            margin-top: 3rem;
+            padding: 0 2rem;
+        }
+
+        .similar-projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .back-section {
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            background-color: var(--gray);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        @media (max-width: 1200px) {
+            .project-detail-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .similar-projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .project-detail-cover {
+                height: 250px;
+            }
+            
+            .project-detail-title {
+                font-size: 1.8rem;
+            }
+            
+            .project-detail-actions {
+                flex-wrap: wrap;
+            }
+            
+            .detail-action-btn.invest {
+                margin-left: 0;
+                width: 100%;
+                order: -1;
+                margin-bottom: 0.5rem;
+            }
+            
+            .project-detail-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .similar-projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                width: 280px;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .main-content.expanded {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .header {
+                padding: 0 1rem;
+            }
+
+            .search-bar {
+                max-width: 50%;
+            }
+
+            .action-btn span {
+                display: none;
+            }
+
+            .action-btn {
+                padding: 0.7rem;
+            }
+
+            .section {
+                padding: 2rem 1rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+
+            .filters {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="logo.png" alt="CIAQ Logo">
+                <span class="logo-text">CIAQ</span>
+            </div>
+            <button class="toggle-btn" id="toggle-sidebar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="menu">
+            <a href="#home" class="menu-item active">
+                <div class="menu-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </div>
+                <span class="menu-text">Главная</span>
+            </a>
+            <a href="#projects" class="menu-item">
+                <div class="menu-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                </div>
+                <span class="menu-text">Каталог проектов</span>
+            </a>
+            <a href="#events" class="menu-item">
+                <div class="menu-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                </div>
+                <span class="menu-text">Мероприятия</span>
+            </a>
+            <a href="#education" class="menu-item">
+                <div class="menu-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                </div>
+                <span class="menu-text">Образование</span>
+            </a>
+            <a href="#investments" class="menu-item">
+                <div class="menu-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                </div>
+                <span class="menu-text">Инвестиции</span>
+            </a>
+            <a href="#ai-chat" class="menu-item">
+                <div class="menu-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <span class="menu-text">ИИ-чат</span>
+            </a>
+        </div>
+        <div class="sidebar-footer">
+            <div class="lang-switch">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                <span class="lang-text">РУС</span>
+            </div>
+            <button class="user-btn" id="profile-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Войти</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+        <!-- Header -->
+        <div class="header">
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <div class="search-bar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" placeholder="Поиск по проектам...">
+            </div>
+            <button class="action-btn" id="submit-project-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Подать проект</span>
+            </button>
+            <button class="notify-btn">
+                <div class="notify-badge">3</div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Main container for dynamic content -->
+        <div id="main-container">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <h1 class="hero-title">Альянс креативных индустрий Казахстана</h1>
+                <p class="hero-subtitle">Платформа для поддержки и развития креативных проектов, объединяющая талантливых профессионалов, инвесторов и партнеров со всего Казахстана.</p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn-primary">Узнать больше</a>
+                    <a href="#" class="btn-secondary">Присоединиться</a>
+                </div>
+            </div>
+
+            <!-- Projects Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Каталог проектов</h2>
+                    <div class="view-options">
+                        <button class="view-btn active" data-view="grid">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </button>
+                        <button class="view-btn" data-view="list">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="8" y1="6" x2="21" y2="6"></line>
+                                <line x1="8" y1="12" x2="21" y2="12"></line>
+                                <line x1="8" y1="18" x2="21" y2="18"></line>
+                                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filters">
+                    <select class="filter-select" data-filter="category">
+                        <option value="">Категория: Все</option>
+                        <option value="Дизайн">Дизайн</option>
+                        <option value="Кино">Кино</option>
+                        <option value="Музыка">Музыка</option>
+                        <option value="IT">IT</option>
+                        <option value="GameDev">GameDev</option>
+                        <option value="Анимация">Анимация</option>
+                    </select>
+                    <select class="filter-select" data-filter="status">
+                        <option value="">Статус: Все</option>
+                        <option value="active">Активный</option>
+                        <option value="development">В разработке</option>
+                    </select>
+                    <select class="filter-select" data-filter="sort">
+                        <option value="">Сортировка</option>
+                        <option value="newest">Новые</option>
+                        <option value="popular">Популярные</option>
+                    </select>
+                </div>
+
+                <div class="projects-grid" id="projects-container">
+                    <!-- Project cards will be dynamically generated here -->
+                </div>
+            </div>
+
+            <!-- Events Preview Section -->
+            <div class="section" style="background-color: var(--gray);">
+                <div class="section-header">
+                    <h2 class="section-title">Ближайшие мероприятия</h2>
+                    <a href="#events" style="color: var(--primary); text-decoration: none; font-weight: 500;">Все мероприятия</a>
+                </div>
+
+                <div class="projects-grid" id="events-container">
+                    <!-- Event cards will be dynamically generated here -->
+                </div>
+            </div>
+
+            <!-- Call To Action Section -->
+            <div style="background: linear-gradient(135deg, var(--secondary) 0%, #FE3A7A 100%); padding: 3rem 2rem; text-align: center; color: white;">
+                <h2 style="font-size: 2rem; margin-bottom: 1.5rem;">Присоединяйтесь к сообществу креативных профессионалов</h2>
+                <p style="max-width: 700px; margin: 0 auto 2rem; line-height: 1.6;">Получите доступ к образовательным материалам, возможностям финансирования, профессиональному сообществу и многому другому.</p>
+                <button style="background-color: white; color: var(--secondary); border: none; border-radius: var(--border-radius); padding: 1rem 2.5rem; font-weight: 500; font-size: 1rem; cursor: pointer; transition: var(--transition);">Зарегистрироваться</button>
+            </div>
+
+            <!-- Footer -->
+            <footer style="background-color: var(--dark); color: white; padding: 3rem 2rem;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+                            <img src="logo.png" alt="CIAQ Logo" style="height: 32px; width: auto; filter: invert(1);">
+                            <h3 style="font-size: 1.5rem; font-family: 'Montserrat', sans-serif; margin: 0;">CIAQ</h3>
+                        </div>
+                        <p style="line-height: 1.6; color: #CCC;">Альянс креативных индустрий Казахстана — некоммерческая организация, поддерживающая развитие креативных секторов экономики Казахстана.</p>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1rem; font-size: 1.1rem;">Разделы</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.7rem;"><a href="#home" style="color: #CCC; text-decoration: none;">Главная</a></li>
+                            <li style="margin-bottom: 0.7rem;"><a href="#projects" style="color: #CCC; text-decoration: none;">Каталог проектов</a></li>
+                            <li style="margin-bottom: 0.7rem;"><a href="#events" style="color: #CCC; text-decoration: none;">Мероприятия</a></li>
+                            <li style="margin-bottom: 0.7rem;"><a href="#education" style="color: #CCC; text-decoration: none;">Образование</a></li>
+                            <li style="margin-bottom: 0.7rem;"><a href="#investments" style="color: #CCC; text-decoration: none;">Инвестиции</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1rem; font-size: 1.1rem;">Контакты</h4>
+                        <p style="margin-bottom: 0.7rem; color: #CCC;">info@ciaq.kz</p>
+                        <p style="margin-bottom: 0.7rem; color: #CCC;">+7 (7172) 123-456</p>
+                        <p style="margin-bottom: 0.7rem; color: #CCC;">Астана, ул. Кунаева 12/1</p>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1rem; font-size: 1.1rem;">Подписаться на новости</h4>
+                        <div style="display: flex; margin-bottom: 1rem;">
+                            <input type="email" placeholder="Ваш email" style="padding: 0.7rem; border: none; border-radius: var(--border-radius) 0 0 var(--border-radius); flex: 1;">
+                            <button style="background-color: var(--primary); color: white; border: none; border-radius: 0 var(--border-radius) var(--border-radius) 0; padding: 0 1rem;">→</button>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <a href="#" style="color: white;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                                </svg>
+                            </a>
+                            <a href="#" style="color: white;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                </svg>
+                            </a>
+                            <a href="#" style="color: white;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 3rem; text-align: center; color: #999; border-top: 1px solid #444; padding-top: 1.5rem;">
+                    <p>© 2025 Альянс креативных индустрий Казахстана. Все права защищены.</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- AI Chat Button -->
+    <div class="ai-chat-btn" id="ai-chat-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+    </div>
+
+    <!-- Include JavaScript files -->
+    <script src="ciaq-data.js"></script>
+    <script src="ciaq-interactive.js"></script>
+    <script>
+        // Toggle Sidebar
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        const toggleSidebarBtn = document.getElementById('toggle-sidebar');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+
+        toggleSidebarBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        });
+
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+
+        // Sample project data
+        const projectsData = [
+            {
+                id: 'proj1',
+                title: 'Цифровая платформа для независимых художников',
+                category: 'IT / Дизайн',
+                status: 'active',
+                image: 'https://via.placeholder.com/800x400',
+                description: 'Инновационная платформа, которая объединяет художников и покупателей искусства напрямую, без посредников.',
+                emoji: '🎨'
+            },
+            {
+                id: 'proj2',
+                title: 'Мобильное приложение для туристов Казахстана',
+                category: 'IT / Туризм',
+                status: 'development',
+                description: 'Полный гид по всем туристическим локациям, достопримечательностям и маршрутам Казахстана.',
+                emoji: '🏔️'
+            },
+            {
+                id: 'proj3',
+                title: 'Фестиваль современной анимации',
+                category: 'Анимация',
+                status: 'active',
+                description: 'Ежегодный фестиваль, объединяющий аниматоров, студии и любителей анимации со всей Центральной Азии.',
+                emoji: '🎬'
+            },
+            {
+                id: 'proj4',
+                title: 'Национальная музыкальная стриминг-платформа',
+                category: 'Музыка / IT',
+                status: 'development',
+                description: 'Стриминговый сервис с акцентом на локальных исполнителях и национальную музыку Казахстана.',
+                emoji: '🎵'
+            },
+            {
+                id: 'proj5',
+                title: 'Интерактивная выставка современного искусства',
+                category: 'Искусство',
+                status: 'active',
+                description: 'Выставка с использованием AR/VR технологий для создания иммерсивного опыта взаимодействия с искусством.',
+                emoji: '🖼️'
+            },
+            {
+                id: 'proj6',
+                title: 'Образовательная платформа для дизайнеров',
+                category: 'Дизайн / Образование',
+                status: 'development',
+                description: 'Онлайн-школа для графических дизайнеров с акцентом на практические навыки и трудоустройство.',
+                emoji: '📚'
+            }
+        ];
+
+        // Populate projects grid
+        function populateProjects() {
+            const projectsContainer = document.getElementById('projects-container');
+            if (!projectsContainer) return;
+            
+            projectsContainer.innerHTML = '';
+            
+            projectsData.forEach(project => {
+                const projectCard = document.createElement('div');
+                projectCard.className = 'project-card';
+                
+                projectCard.innerHTML = `
+                    <div class="project-img">${project.emoji}</div>
+                    <div class="project-content">
+                        <span class="project-category">${project.category.split('/')[0].trim()}</span>
+                        <h3 class="project-title">${project.title}</h3>
+                        <p class="project-desc">${project.description}</p>
+                        <div class="project-footer">
+                            <div class="project-status">
+                                <span class="status-dot status-${project.status}"></span>
+                                ${project.status === 'active' ? 'Активный' : 'В разработке'}
+                            </div>
+                            <a href="#project-${project.id}" class="project-more" data-project-id="${project.id}">Подробнее</a>
+                        </div>
+                    </div>
+                `;
+                
+                projectsContainer.appendChild(projectCard);
+            });
+        }
+
+        // Project Detail View Function
+        function showProjectDetail(projectId) {
+            // In a real app, you would fetch the project data from an API
+            // For this prototype, we'll use sample data
+            const project = {
+                id: projectId || 'proj123',
+                title: 'Цифровая платформа для независимых художников',
+                category: 'IT / Дизайн',
+                status: 'active',
+                image: 'https://via.placeholder.com/800x400',
+                description: 'Инновационная платформа, которая объединяет художников и покупателей искусства напрямую, без посредников. Художники размещают свои работы, устанавливают цены и получают 90% от продаж. Платформа предоставляет аналитику, инструменты продвижения и защиту авторских прав.',
+                fullDescription: 'Наша цифровая платформа создана для поддержки независимых художников и обеспечения прямого взаимодействия между создателями искусства и его ценителями. Мы стремимся сделать искусство более доступным, а работу художников - более прибыльной и устойчивой.<br><br>Платформа предлагает комплексные решения: виртуальные галереи с поддержкой VR, систему безопасных платежей, инструменты продвижения через социальные сети и аналитику для отслеживания эффективности продаж. Мы также реализуем блокчейн-систему для защиты авторских прав на цифровое искусство.',
+                targetAudience: {
+                    primary: 'Независимые художники, иллюстраторы и цифровые творцы, ищущие новые каналы продаж своих работ',
+                    secondary: 'Коллекционеры и ценители искусства, предпочитающие приобретать работы напрямую у художников',
+                    demographics: 'Мужчины и женщины 25-45 лет с высшим образованием и средним/высоким уровнем дохода, проживающие в крупных городах Казахстана и соседних стран'
+                },
+                team: [
+                    {
+                        name: 'Аслан Ергалиев',
+                        role: 'Основатель / CEO',
+                        photo: 'https://via.placeholder.com/100',
+                        bio: '10+ лет опыта в IT и арт-индустрии. Бывший технический директор крупной галереи в Алматы.'
+                    },
+                    {
+                        name: 'Анара Сагынаева',
+                        role: 'CTO',
+                        photo: 'https://via.placeholder.com/100',
+                        bio: 'Full-stack разработчик с 8-летним опытом. Специализируется на веб-приложениях и блокчейн-технологиях.'
+                    },
+                    {
+                        name: 'Дамир Кенжебаев',
+                        role: 'Арт-директор',
+                        photo: 'https://via.placeholder.com/100',
+                        bio: 'Художник и куратор с международным опытом. Выпускник Академии искусств в Париже.'
+                    }
+                ],
+                needs: {
+                    investment: 'Требуется инвестиция в размере $150,000 для завершения разработки платформы, маркетинга и операционных расходов на первый год',
+                    expertise: 'Ищем менторов с опытом в арт-бизнесе и маркетинге цифровых продуктов',
+                    partners: 'Заинтересованы в партнерстве с галереями, арт-школами и художественными объединениями'
+                },
+                progress: 65,
+                launched: '2024-03-10',
+                location: 'Алматы, Казахстан',
+                website: 'https://artplatform.kz',
+                contact: 'info@artplatform.kz',
+                social: {
+                    instagram: 'artplatform_kz',
+                    facebook: 'artplatformkz',
+                    telegram: 'artplatform'
+                }
+            };
+
+            const mainContainer = document.getElementById('main-container');
+            mainContainer.innerHTML = `
+                <div class="project-detail-container">
+                    <!-- Project Header -->
+                    <div class="project-detail-header">
+                        <div class="project-detail-cover" style="background-image: url('${project.image}')">
+                            <div class="project-detail-overlay">
+                                <h1 class="project-detail-title">${project.title}</h1>
+                                <div class="project-detail-meta">
+                                    <span class="project-detail-category">${project.category}</span>
+                                    <span class="project-detail-status ${project.status === 'active' ? 'status-active' : 'status-development'}">
+                                        <span class="status-dot ${project.status === 'active' ? 'status-active' : 'status-development'}"></span>
+                                        ${project.status === 'active' ? 'Активный' : 'В разработке'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-detail-actions">
+                            <button class="detail-action-btn favorite">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                                В избранное
+                            </button>
+                            <button class="detail-action-btn share">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="18" cy="5" r="3"></circle>
+                                    <circle cx="6" cy="12" r="3"></circle>
+                                    <circle cx="18" cy="19" r="3"></circle>
+                                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                                </svg>
+                                Поделиться
+                            </button>
+                            <button class="detail-action-btn invest">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                                Инвестировать
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Project Content -->
+                    <div class="project-detail-content">
+                        <div class="project-detail-grid">
+                            <!-- Project Description Card -->
+                            <div class="detail-card">
+                                <div class="detail-card-header">
+                                    <h3 class="detail-card-title">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                                            <polyline points="10 9 9 9 8 9"></polyline>
+                                        </svg>
+                                        О проекте
+                                    </h3>
+                                </div>
+                                <div class="detail-card-body">
+                                    <p>${project.fullDescription}</p>
+                                    
+                                    <div class="project-detail-stats">
+                                        <div class="detail-stat">
+                                            <span class="detail-stat-label">Прогресс</span>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: ${project.progress}%"></div>
+                                            </div>
+                                            <span class="detail-stat-value">${project.progress}%</span>
+                                        </div>
+                                        <div class="detail-stat">
+                                            <span class="detail-stat-label">Запуск</span>
+                                            <span class="detail-stat-value">${new Date(project.launched).toLocaleDateString('ru-RU')}</span>
+                                        </div>
+                                        <div class="detail-stat">
+                                            <span class="detail-stat-label">Локация</span>
+                                            <span class="detail-stat-value">${project.location}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="project-detail-links">
+                                        <a href="${project.website}" target="_blank" class="detail-link">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                            </svg>
+                                            Вебсайт
+                                        </a>
+                                        <a href="mailto:${project.contact}" class="detail-link">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                                <polyline points="22,6 12,13 2,6"></polyline>
+                                            </svg>
+                                            Связаться
+                                        </a>
+                                        <div class="social-links">
+                                            <a href="https://instagram.com/${project.social.instagram}" target="_blank" class="social-link">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                                </svg>
+                                            </a>
+                                            <a href="https://facebook.com/${project.social.facebook}" target="_blank" class="social-link">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                                                </svg>
+                                            </a>
+                                            <a href="https://t.me/${project.social.telegram}" target="_blank" class="social-link">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M21.198 2.433a2.242 2.242 0 0 0-1.022.215l-16.5 7.5a2.25 2.25 0 0 0 .126 4.073l3.9 1.205 2.25 6.54a2.25 2.25 0 0 0 4.135.075l8.25-15.75a2.25 2.25 0 0 0-1.139-3.855z"></path>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Target Audience Card -->
+                            <div class="detail-card">
+                                <div class="detail-card-header">
+                                    <h3 class="detail-card-title">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        </svg>
+                                        Целевая аудитория
+                                    </h3>
+                                </div>
+                                <div class="detail-card-body">
+                                    <div class="audience-section">
+                                        <h4 class="audience-title">Основная ЦА</h4>
+                                        <p>${project.targetAudience.primary}</p>
+                                    </div>
+                                    <div class="audience-section">
+                                        <h4 class="audience-title">Вторичная ЦА</h4>
+                                        <p>${project.targetAudience.secondary}</p>
+                                    </div>
+                                    <div class="audience-section">
+                                        <h4 class="audience-title">Демографические данные</h4>
+                                        <p>${project.targetAudience.demographics}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Team Card -->
+                            <div class="detail-card">
+                                <div class="detail-card-header">
+                                    <h3 class="detail-card-title">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        </svg>
+                                        Команда
+                                    </h3>
+                                </div>
+                                <div class="detail-card-body">
+                                    <div class="team-members">
+                                        ${project.team.map(member => `
+                                            <div class="team-member">
+                                                <div class="team-member-photo" style="background-image: url('${member.photo}')"></div>
+                                                <div class="team-member-info">
+                                                    <h4 class="team-member-name">${member.name}</h4>
+                                                    <div class="team-member-role">${member.role}</div>
+                                                    <p class="team-member-bio">${member.bio}</p>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Project Needs Card -->
+                            <div class="detail-card">
+                                <div class="detail-card-header">
+                                    <h3 class="detail-card-title">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+                                            <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+                                        </svg>
+                                        Потребности проекта
+                                    </h3>
+                                </div>
+                                <div class="detail-card-body">
+                                    <div class="needs-section">
+                                        <h4 class="needs-title">Инвестиции</h4>
+                                        <p>${project.needs.investment}</p>
+                                    </div>
+                                    <div class="needs-section">
+                                        <h4 class="needs-title">Экспертиза</h4>
+                                        <p>${project.needs.expertise}</p>
+                                    </div>
+                                    <div class="needs-section">
+                                        <h4 class="needs-title">Партнерства</h4>
+                                        <p>${project.needs.partners}</p>
+                                    </div>
+                                    <div class="invest-cta">
+                                        <button class="invest-btn" id="project-invest-btn">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                            </svg>
+                                            Инвестировать в проект
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Similar Projects -->
+                    <div class="similar-projects-section">
+                        <h3 class="section-title">Похожие проекты</h3>
+                        <div class="similar-projects-grid">
+                            <div class="project-card">
+                                <div class="project-img">🎨</div>
+                                <div class="project-content">
+                                    <span class="project-category">Дизайн</span>
+                                    <h3 class="project-title">Студия цифрового искусства</h3>
+                                    <p class="project-desc">Создание студии для выставок цифрового искусства с VR-презентациями.</p>
+                                    <div class="project-footer">
+                                        <div class="project-status">
+                                            <span class="status-dot status-active"></span>
+                                            Активный
+                                        </div>
+                                        <a href="#" class="project-more">Подробнее</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="project-card">
+                                <div class="project-img">🖥️</div>
+                                <div class="project-content">
+                                    <span class="project-category">IT</span>
+                                    <h3 class="project-title">Marketplace для NFT</h3>
+                                    <p class="project-desc">Платформа для создания, продажи и обмена NFT на блокчейне.</p>
+                                    <div class="project-footer">
+                                        <div class="project-status">
+                                            <span class="status-dot status-development"></span>
+                                            В разработке
+                                        </div>
+                                        <a href="#" class="project-more">Подробнее</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="project-card">
+                                <div class="project-img">🎭</div>
+                                <div class="project-content">
+                                    <span class="project-category">Искусство</span>
+                                    <h3 class="project-title">Арт-резиденция</h3>
+                                    <p class="project-desc">Пространство для работы художников с мастерскими и выставочными залами.</p>
+                                    <div class="project-footer">
+                                        <div class="project-status">
+                                            <span class="status-dot status-active"></span>
+                                            Активный
+                                        </div>
+                                        <a href="#" class="project-more">Подробнее</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Back Button -->
+                    <div class="back-section">
+                        <button class="back-btn" id="back-to-projects-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                            </svg>
+                            Вернуться к проектам
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Add event listeners for buttons
+            document.getElementById('back-to-projects-btn').addEventListener('click', () => {
+                window.location.hash = '#projects';
+            });
+
+            document.getElementById('project-invest-btn').addEventListener('click', () => {
+                alert('Открытие формы для инвестирования в проект');
+            });
+
+            const favoriteBtn = document.querySelector('.detail-action-btn.favorite');
+            favoriteBtn.addEventListener('click', function() {
+                this.classList.toggle('active');
+                if (this.classList.contains('active')) {
+                    this.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                        В избранном
+                    `;
+                    alert('Проект добавлен в избранное!');
+                } else {
+                    this.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                        В избранное
+                    `;
+                }
+            });
+
+            document.querySelector('.detail-action-btn.share').addEventListener('click', () => {
+                alert('Открытие окна для шаринга проекта');
+            });
+
+            document.querySelector('.detail-action-btn.invest').addEventListener('click', () => {
+                alert('Открытие формы для инвестирования в проект');
+            });
+        }
+
+        // Submit project button
+        document.getElementById('submit-project-btn').addEventListener('click', () => {
+            // Show project submission form
+            const mainContainer = document.getElementById('main-container');
+            mainContainer.innerHTML = `
+                <div class="section">
+                    <h2 class="section-title">Подать проект</h2>
+                    <div class="form-container">
+                        <form id="project-form">
+                            <div class="form-group">
+                                <label class="form-label" for="project-name">Название проекта</label>
+                                <input type="text" id="project-name" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="project-category">Категория</label>
+                                <select id="project-category" class="form-select" required>
+                                    <option value="">Выберите категорию</option>
+                                    <option value="Дизайн">Дизайн</option>
+                                    <option value="Кино">Кино</option>
+                                    <option value="Музыка">Музыка</option>
+                                    <option value="IT">IT</option>
+                                    <option value="GameDev">GameDev</option>
+                                    <option value="Анимация">Анимация</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="project-description">Описание проекта</label>
+                                <textarea id="project-description" class="form-textarea" rows="4" required></textarea>
+                                <div class="form-help">Опишите ваш проект, его цели и уникальные особенности</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="project-target">Целевая аудитория</label>
+                                <input type="text" id="project-target" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="project-needs">Потребности проекта</label>
+                                <textarea id="project-needs" class="form-textarea" rows="3" required></textarea>
+                                <div class="form-help">Укажите, что необходимо для реализации проекта (инвестиции, команда, оборудование и т.д.)</div>
+                            </div>
+                            <div class="project-actions">
+                                <button type="button" class="action-btn secondary" id="cancel-project">Отмена</button>
+                                <button type="submit" class="action-btn">Отправить</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            // Handle form submission
+            document.getElementById('project-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Ваш проект успешно отправлен и будет рассмотрен модераторами в ближайшее время.');
+                window.location.hash = '#projects';
+            });
+            
+            // Handle cancel button
+            document.getElementById('cancel-project').addEventListener('click', () => {
+                window.location.hash = '#projects';
+            });
+        });
+
+        // Initialize page based on hash
+        function initPage() {
+            const hash = window.location.hash || '#home';
+            
+            if (hash.startsWith('#project-')) {
+                const projectId = hash.replace('#project-', '');
+                showProjectDetail(projectId);
+            } else if (hash === '#projects') {
+                // Show projects grid (already in HTML)
+                populateProjects();
+            } else if (hash === '#home') {
+                // Populate featured projects on home page
+                populateProjects();
+            }
+            
+            // Add event listeners for filters
+            setupFilters();
+        }
+
+        // Setup project filters
+        function setupFilters() {
+            const filterSelects = document.querySelectorAll('.filter-select');
+            filterSelects.forEach(select => {
+                select.addEventListener('change', filterProjects);
+            });
+            
+            const viewButtons = document.querySelectorAll('.view-btn');
+            viewButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    viewButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const view = this.getAttribute('data-view');
+                    const projectsContainer = document.getElementById('projects-container');
+                    
+                    if (view === 'list') {
+                        projectsContainer.classList.add('list-view');
+                    } else {
+                        projectsContainer.classList.remove('list-view');
+                    }
+                });
+            });
+        }
+        
+        // Filter projects based on selected filters
+        function filterProjects() {
+            const categoryFilter = document.querySelector('.filter-select[data-filter="category"]').value;
+            const statusFilter = document.querySelector('.filter-select[data-filter="status"]').value;
+            const sortFilter = document.querySelector('.filter-select[data-filter="sort"]').value;
+            
+            let filteredProjects = [...projectsData];
+            
+            // Filter by category
+            if (categoryFilter) {
+                filteredProjects = filteredProjects.filter(project => 
+                    project.category.includes(categoryFilter)
+                );
+            }
+            
+            // Filter by status
+            if (statusFilter) {
+                filteredProjects = filteredProjects.filter(project => 
+                    project.status === statusFilter
+                );
+            }
+            
+            // Sort projects
+            if (sortFilter === 'newest') {
+                // In a real app, you would sort by date
+                filteredProjects.reverse();
+            } else if (sortFilter === 'popular') {
+                // In a real app, you would sort by popularity metrics
+                filteredProjects.sort((a, b) => b.id.localeCompare(a.id));
+            }
+            
+            // Update projects display
+            const projectsContainer = document.getElementById('projects-container');
+            projectsContainer.innerHTML = '';
+            
+            if (filteredProjects.length === 0) {
+                projectsContainer.innerHTML = `
+                    <div class="no-results">
+                        <p>Нет проектов, соответствующих выбранным фильтрам.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredProjects.forEach(project => {
+                const projectCard = document.createElement('div');
+                projectCard.className = 'project-card';
+                
+                projectCard.innerHTML = `
+                    <div class="project-img">${project.emoji}</div>
+                    <div class="project-content">
+                        <span class="project-category">${project.category.split('/')[0].trim()}</span>
+                        <h3 class="project-title">${project.title}</h3>
+                        <p class="project-desc">${project.description}</p>
+                        <div class="project-footer">
+                            <div class="project-status">
+                                <span class="status-dot status-${project.status}"></span>
+                                ${project.status === 'active' ? 'Активный' : 'В разработке'}
+                            </div>
+                            <a href="#project-${project.id}" class="project-more" data-project-id="${project.id}">Подробнее</a>
+                        </div>
+                    </div>
+                `;
+                
+                projectsContainer.appendChild(projectCard);
+            });
+        }
+
+        // Listen for hash changes
+        window.addEventListener('hashchange', initPage);
+        
+        // Initialize page on load
+        document.addEventListener('DOMContentLoaded', function() {
+            populateProjects();
+            initPage();
+            
+            // Handle project card clicks
+            document.addEventListener('click', function(e) {
+                const projectMore = e.target.closest('.project-more');
+                if (projectMore) {
+                    e.preventDefault();
+                    const projectId = projectMore.getAttribute('data-project-id') || 'sample';
+                    window.location.hash = `#project-${projectId}`;
+                    showProjectDetail(projectId);
+                }
+            });
+        });
+
+        // Additional functionality will be handled by ciaq-interactive.js
+    </script>
+</body>
+</html>
