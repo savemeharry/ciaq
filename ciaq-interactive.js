@@ -130,13 +130,15 @@ function setupEventListeners() {
     // Navigation menu items
     document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', (e) => {
-            e.preventDefault();
             const target = item.getAttribute('href');
-            
+            if (target === '#home') {
+                window.location.href = 'index.html';
+                return;
+            }
+            e.preventDefault();
             // Set active menu item
             document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
             item.classList.add('active');
-            
             // Navigate to the target page
             navigateTo(target);
         });
@@ -146,6 +148,10 @@ function setupEventListeners() {
 // Page navigation
 function navigateTo(target) {
     switch(target) {
+        case '#home':
+        case 'index.html':
+            renderHomePage();
+            break;
         case '#projects':
             renderProjectsPage();
             break;
@@ -168,7 +174,7 @@ function navigateTo(target) {
                 renderLoginPage();
             }
             break;
-        default: // Home
+        default:
             renderHomePage();
     }
 }
@@ -768,12 +774,6 @@ function renderEducationPage() {
                     </div>
                 `).join('')}
             </div>
-            
-            <div style="text-align: center; margin-top: 3rem; padding: 2rem; background-color: var(--gray); border-radius: var(--border-radius);">
-                <h3 style="margin-bottom: 1rem;">Хотите предложить образовательный материал?</h3>
-                <p style="margin-bottom: 1.5rem;">Если вы эксперт в креативной области и хотите поделиться своими знаниями, мы будем рады сотрудничеству.</p>
-                <button class="action-btn">Предложить материал</button>
-            </div>
         </div>
     `;
 }
@@ -786,26 +786,25 @@ function renderInvestmentsPage() {
     dom.mainContainer.innerHTML = `
         <div class="section">
             <div class="section-header">
-                <h2 class="section-title">Инвестиционный портал</h2>
+                <h2 class="section-title" style="text-align: left;">Инвестиционный портал</h2>
             </div>
             
-            <div style="max-width: 800px; margin: 0 auto 3rem;">
-                <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">
+            <div style="max-width: 800px; margin: 0 0 3rem 0;">
+                <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem; text-align: left; margin-left: 0; margin-right: 0;">
                     Инвестиционный портал CIAQ предоставляет возможность инвесторам найти перспективные проекты 
                     в креативных индустриях Казахстана, а предпринимателям — привлечь необходимое финансирование 
                     и экспертную поддержку для развития своих идей.
                 </p>
-                
-                <div style="display: flex; gap: 2rem; margin-bottom: 3rem;">
-                    <div style="flex: 1; text-align: center; padding: 2rem; background-color: var(--gray); border-radius: var(--border-radius);">
+                <div style="display: flex; gap: 2rem; margin-bottom: 3rem; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px; text-align: left; padding: 2rem; background-color: var(--gray); border-radius: var(--border-radius); display: flex; flex-direction: column;">
                         <h3 style="margin-bottom: 1rem;">Для инвесторов</h3>
                         <p style="margin-bottom: 1.5rem;">Инвестируйте в будущее креативной экономики Казахстана</p>
-                        <button class="action-btn">Стать инвестором</button>
+                        <button class="action-btn" style="margin-top:2rem; text-align:left;">Стать инвестором</button>
                     </div>
-                    <div style="flex: 1; text-align: center; padding: 2rem; background-color: var(--gray); border-radius: var(--border-radius);">
+                    <div style="flex: 1; min-width: 250px; text-align: left; padding: 2rem; background-color: var(--gray); border-radius: var(--border-radius); display: flex; flex-direction: column;">
                         <h3 style="margin-bottom: 1rem;">Для проектов</h3>
                         <p style="margin-bottom: 1.5rem;">Привлеките инвестиции для реализации вашего проекта</p>
-                        <button class="action-btn secondary">Подать проект</button>
+                        <button class="action-btn secondary" style="margin-top:2rem; text-align:left;">Подать проект</button>
                     </div>
                 </div>
             </div>
@@ -862,6 +861,8 @@ function renderInvestmentsPage() {
             }
         });
     });
+    
+    window.scrollTo(0, 0);
 }
 
 // Render login page

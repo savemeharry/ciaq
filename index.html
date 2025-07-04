@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CIAQ - Веб-сервис креативной индустрии</title>
+    <title>Transfornation - Веб-сервис креативной индустрии</title>
     <link rel="stylesheet" href="ciaq-interactive.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap">
     <style>
         :root {
-            --primary: #6C63FF;
-            --primary-dark: #5A50E5;
-            --secondary: #FF6584;
-            --accent: #00BFA6;
-            --dark: #333333;
+            --primary: #249cff;
+            --primary-dark: #004377;
+            --secondary: #f0366e;
+            --accent: #249cff;
+            --dark: #111111;
             --light: #F8F9FA;
             --gray: #EAEAEA;
-            --text: #444444;
+            --text: #111111;
             --sidebar-width: 240px;
             --sidebar-width-collapsed: 70px;
             --header-height: 70px;
@@ -76,7 +76,7 @@
         }
 
         .logo img {
-            height: 32px;
+            height: 60px;
             width: auto;
         }
 
@@ -305,7 +305,7 @@
         }
 
         .action-btn:hover {
-            background-color: #ff4f75;
+            background-color: #b60859;
         }
 
         .action-btn svg {
@@ -1067,6 +1067,22 @@
                 flex-direction: column;
             }
         }
+
+        .logo-full {
+            display: block;
+        }
+        .logo-collapsed {
+            display: none;
+        }
+        .sidebar.collapsed .logo-full {
+            display: none;
+        }
+        .sidebar.collapsed .logo-collapsed {
+            display: block;
+            height: 40px;
+            width: auto;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
@@ -1074,8 +1090,8 @@
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="logo">
-                <img src="logo.png" alt="CIAQ Logo">
-                <span class="logo-text">CIAQ</span>
+                <img src="logo_horizontal_750px.png" alt="Transfornation Logo" class="logo-full">
+                <img src="logo_cut.png" alt="Transfornation Logo Small" class="logo-collapsed">
             </div>
             <button class="toggle-btn" id="toggle-sidebar">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1131,31 +1147,6 @@
                 </div>
                 <span class="menu-text">Инвестиции</span>
             </a>
-            <a href="#ai-chat" class="menu-item">
-                <div class="menu-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                </div>
-                <span class="menu-text">ИИ-чат</span>
-            </a>
-        </div>
-        <div class="sidebar-footer">
-            <div class="lang-switch">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="2" y1="12" x2="22" y2="12"></line>
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                </svg>
-                <span class="lang-text">РУС</span>
-            </div>
-            <button class="user-btn" id="profile-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-                <span>Войти</span>
-            </button>
         </div>
     </div>
 
@@ -1191,6 +1182,23 @@
                     <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                 </svg>
             </button>
+            <div style="display: flex; align-items: center; gap: 1rem; margin-left: 1.5rem;">
+                <div class="lang-switch">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                    <span class="lang-text">РУС</span>
+                </div>
+                <button class="user-btn" id="profile-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Войти</span>
+                </button>
+            </div>
         </div>
 
         <!-- Main container for dynamic content -->
@@ -1282,15 +1290,14 @@
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
                     <div>
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
-                            <img src="logo.png" alt="CIAQ Logo" style="height: 32px; width: auto; filter: invert(1);">
-                            <h3 style="font-size: 1.5rem; font-family: 'Montserrat', sans-serif; margin: 0;">CIAQ</h3>
+                            <img src="logo_horizontal_750px.png" alt="Transfornation Logo" style="height: 70px; width: auto; filter: brightness(0) invert(1);">
                         </div>
-                        <p style="line-height: 1.6; color: #CCC;">Альянс креативных индустрий Казахстана — некоммерческая организация, поддерживающая развитие креативных секторов экономики Казахстана.</p>
+                        <p style="line-height: 1.6; color: #CCC;">Transfornation — некоммерческая организация, поддерживающая развитие креативных секторов экономики Казахстана.</p>
                     </div>
                     <div>
                         <h4 style="margin-bottom: 1rem; font-size: 1.1rem;">Разделы</h4>
                         <ul style="list-style: none; padding: 0;">
-                            <li style="margin-bottom: 0.7rem;"><a href="#home" style="color: #CCC; text-decoration: none;">Главная</a></li>
+                            <li style="margin-bottom: 0.7rem;"><a href="index.html" style="color: #CCC; text-decoration: none;">Главная</a></li>
                             <li style="margin-bottom: 0.7rem;"><a href="#projects" style="color: #CCC; text-decoration: none;">Каталог проектов</a></li>
                             <li style="margin-bottom: 0.7rem;"><a href="#events" style="color: #CCC; text-decoration: none;">Мероприятия</a></li>
                             <li style="margin-bottom: 0.7rem;"><a href="#education" style="color: #CCC; text-decoration: none;">Образование</a></li>
@@ -1331,7 +1338,7 @@
                     </div>
                 </div>
                 <div style="margin-top: 3rem; text-align: center; color: #999; border-top: 1px solid #444; padding-top: 1.5rem;">
-                    <p>© 2025 Альянс креативных индустрий Казахстана. Все права защищены.</p>
+                    <p>© 2025 Transfornation. Все права защищены.</p>
                 </div>
             </footer>
         </div>
@@ -2025,6 +2032,13 @@
         });
 
         // Additional functionality will be handled by ciaq-interactive.js
+
+        // Починка перехода на главную страницу
+        document.getElementById('menu-home').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.hash = '#home';
+            initPage();
+        });
     </script>
 </body>
 </html>
