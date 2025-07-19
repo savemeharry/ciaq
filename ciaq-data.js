@@ -11,9 +11,11 @@ const ciaqData = {
             description: "Исторический фильм о становлении казахской государственности. Съемки в аутентичных локациях с применением современных визуальных эффектов.",
             fullDescription: "Масштабный исторический проект, рассказывающий о ключевых моментах становления казахской государственности. Фильм охватывает период с XV по XVIII век и фокусируется на важнейших событиях формирования казахского ханства. Съемки проходят в аутентичных локациях по всему Казахстану с привлечением ведущих специалистов по историческому консультированию и современным визуальным эффектам.",
             photos: [
-                "Steppe.jpg",
-                "https://images.unsplash.com/photo-1565889717385-12044c1dd483?w=800&h=400&fit=crop",
-                "https://images.unsplash.com/photo-1612892188021-a8ccb8f92d6d?w=800&h=400&fit=crop"
+                "https://img.freepik.com/premium-photo/serene-steppe-cinematic-journey-through-desolate-landscapes_899449-501779.jpg", // Степь - кинематографический кадр (главное)
+                "Steppe.jpg", // Дополнительное фото степи
+                "https://imgcdn.stablediffusionweb.com/2024/10/28/f386f54c-de91-4453-89e1-41c800260c2f.jpg", // Дополнительное фото
+                "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop", // Film production/cinema
+                "https://images.unsplash.com/photo-1489599510225-56d9a3a9bbff?w=800&h=400&fit=crop"  // Movie camera equipment
             ],
             problems: [
                 "Недостаток исторических фильмов высокого качества на казахском языке",
@@ -65,9 +67,9 @@ const ciaqData = {
             description: "Мобильное приложение с дополненной реальностью, оживляющее казахские мифы и легенды для современного поколения.",
             fullDescription: "Инновационное мобильное приложение с использованием технологий дополненной реальности (AR), которое оживляет персонажей казахской мифологии и легенд. Приложение позволяет пользователям взаимодействовать с виртуальными персонажами в реальном мире через камеру смартфона. Проект направлен на популяризацию культурного наследия Казахстана среди молодежи и международной аудитории.",
             photos: [
-                "https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=800&h=400&fit=crop",
-                "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?w=800&h=400&fit=crop",
-                "https://images.unsplash.com/photo-1636633762833-5d1658f1e29b?w=800&h=400&fit=crop"
+                "https://images.unsplash.com/photo-1617791160588-241658c0f566?w=800&h=400&fit=crop", // Mobile app development (титульное)
+                "https://images.unsplash.com/photo-1592478411213-6153e4ebc696?w=800&h=400&fit=crop", // AR phone use
+                "https://images.unsplash.com/photo-1636633762833-5d1658f1e29b?w=800&h=400&fit=crop"  // AR technology
             ],
             problems: [
                 "Утрата интереса молодежи к национальным мифам и легендам",
@@ -119,9 +121,9 @@ const ciaqData = {
             description: "Цифровая библиотека казахских орнаментов для дизайнеров с возможностью кастомизации и интеграции в современные проекты.",
             fullDescription: "Цифровая библиотека традиционных казахских орнаментов, созданная для использования дизайнерами в современных проектах. Библиотека включает векторные файлы высокого качества с функцией кастомизации цветов, форм и пропорций. Проект также предлагает API для интеграции в цифровые продукты и платформы, позволяя разработчикам автоматизировать использование казахских орнаментальных мотивов.",
             photos: [
-                "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&h=400&fit=crop",
-                "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=400&fit=crop",
-                "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&h=400&fit=crop"
+                "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&h=400&fit=crop", // Islamic geometric patterns
+                "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&h=400&fit=crop", // Traditional ornaments
+                "https://images.unsplash.com/photo-1558618666-e48dd3e4c45b?w=800&h=400&fit=crop"  // Pattern design work
             ],
             problems: [
                 "Ограниченный доступ дизайнеров к аутентичным казахским орнаментам",
@@ -173,9 +175,9 @@ const ciaqData = {
             description: "Экспериментальная музыкальная лаборатория, объединяющая традиционные казахские инструменты с современными электронными звуками.",
             fullDescription: "Творческая лаборатория, специализирующаяся на экспериментальной музыке на стыке традиционного казахского звучания и современной электроники. Проект включает запись оригинальных треков, звуковых библиотек семплов национальных инструментов и образовательных программ для молодых музыкантов. В перспективе – создание музыкальной студии с полным циклом производства и выпуска этно-электронной музыки.",
             photos: [
-                "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=400&fit=crop",
-                "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop",
-                "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800&h=400&fit=crop"
+                "https://weproject.media/upload/medialibrary/aea/aeaa667d619b23f6375e377bd1e8c786.jpg", // Казахские национальные инструменты (титульное)
+                "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800&h=400&fit=crop", // Music production
+                "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop"  // Electronic music studio
             ],
             problems: [
                 "Исчезновение традиционных музыкальных инструментов из современной культуры",
@@ -227,9 +229,11 @@ const ciaqData = {
             description: "Детский анимационный сериал о приключениях современного мальчика, изучающего историю великих казахских батыров.",
             fullDescription: "Анимационный сериал для детей, рассказывающий о приключениях современного школьника Алана, который с помощью волшебной книги переносится в прошлое и встречается с легендарными казахскими батырами. Каждая серия посвящена отдельному историческому персонажу и важному уроку, который герой извлекает из своего путешествия. Проект сочетает развлекательный контент с образовательной составляющей.",
             photos: [
-                "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=800&h=400&fit=crop",
-                "https://images.unsplash.com/photo-1612892188021-a8ccb8f92d6d?w=800&h=400&fit=crop",
-                "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=400&fit=crop"
+                "https://aakr.ru/wp-content/uploads/2023/06/jepos-tugan-batyr-ot-studii-terra-anima.jpg", // Казахский батыр - анимация (титульное)
+                "https://stcdn.business-online.ru/photos/535951/246363.jpg", // Дополнительное фото
+                "https://stcdn.business-online.ru/photos/535951/246360.jpg", // Дополнительное фото
+                "https://images.unsplash.com/photo-1561736778-92e52a7769ef?w=800&h=400&fit=crop", // Children's illustration/cartoon
+                "https://images.unsplash.com/photo-1609613568488-e2e10fcd5056?w=800&h=400&fit=crop"  // 3D character animation
             ],
             problems: [
                 "Недостаток качественного детского контента на казахском языке",
@@ -281,9 +285,9 @@ const ciaqData = {
             description: "Проект по разработке инструментов обработки естественного языка для казахского языка, включая морфологический анализатор и синтезатор речи.",
             fullDescription: "Технологический проект, направленный на создание комплексных инструментов обработки казахского языка с использованием современных методов машинного обучения. В рамках проекта разрабатываются морфологический анализатор, синтезатор речи, модель для распознавания речи и другие NLP-инструменты. Проект имеет открытый исходный код и нацелен на развитие казахскоязычных цифровых сервисов.",
             photos: [
-                "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&h=400&fit=crop",
-                "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop",
-                "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=800&h=400&fit=crop"
+                "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&h=400&fit=crop", // Programming/coding
+                "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop", // AI/Machine Learning
+                "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop"  // Natural language processing
             ],
             problems: [
                 "Слабая поддержка казахского языка в современных IT-решениях",
