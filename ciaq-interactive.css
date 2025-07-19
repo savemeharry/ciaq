@@ -1,5 +1,612 @@
 /* Interactive elements styling for CIAQ prototype */
 
+/* Enhanced Project Cards */
+.project-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    cursor: pointer;
+}
+
+.project-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.project-card:hover .project-img-gallery {
+    transform: scale(1.05);
+}
+
+.project-card:hover .project-title {
+    color: var(--primary);
+}
+
+/* Photo Gallery for Project Cards */
+.project-img-gallery {
+    height: 220px;
+    background: linear-gradient(135deg, var(--gray) 0%, #e0e0e0 100%);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s ease;
+}
+
+.project-img-gallery img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+}
+
+.project-photo-nav {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+}
+
+.photo-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.photo-dot.active {
+    background-color: white;
+    transform: scale(1.2);
+}
+
+.project-category-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    color: var(--primary);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    z-index: 2;
+    animation: slideInFromRight 0.6s ease;
+}
+
+/* Enhanced Project Content */
+.project-content-enhanced {
+    padding: 1.8rem;
+    position: relative;
+}
+
+.project-title-enhanced {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--dark);
+    transition: color 0.3s ease;
+    line-height: 1.3;
+}
+
+.project-desc-enhanced {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    color: #666;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Problems Section */
+.project-problems-preview {
+    margin-bottom: 1.5rem;
+}
+
+.problems-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.problems-title::before {
+    content: "";
+}
+
+.problems-list-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.problem-item-preview {
+    font-size: 0.85rem;
+    color: #666;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.problem-item-preview::before {
+    content: "•";
+    color: var(--secondary);
+    position: absolute;
+    left: 0;
+}
+
+/* Enhanced Footer */
+.project-footer-enhanced {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.project-status-enhanced {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #666;
+    gap: 0.5rem;
+}
+
+.status-dot-enhanced {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.status-active {
+    background-color: #10b981;
+}
+
+.status-development {
+    background-color: #f59e0b;
+}
+
+/* Updated Project More Button */
+.project-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--primary);
+    text-decoration: none;
+    background-color: rgba(36, 156, 255, 0.1);
+    border: 1px solid rgba(36, 156, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.project-more-btn:hover {
+    background-color: var(--primary);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(36, 156, 255, 0.3);
+}
+
+/* Animations */
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Project Detail Page Enhancements */
+.project-detail-enhanced {
+    max-width: 1200px;
+    margin: 0 auto;
+    animation: fadeInUp 0.6s ease;
+    padding-bottom: 120px; /* Добавляем отступ для фиксированных кнопок */
+}
+
+/* Project Hero Section Enhanced */
+.project-hero-section {
+    background: #f0f0f0; /* Чуть темнее основного белого фона */
+    border-radius: var(--border-radius-lg);
+    padding: 3rem 2rem;
+    margin-bottom: 3rem;
+    text-align: center;
+    position: relative;
+    color: var(--dark);
+    border: 1px solid #e0e0e0;
+}
+
+.project-hero-enhanced {
+    background: #f0f0f0; /* Чуть темнее основного белого фона */
+    border-radius: var(--border-radius-lg);
+    padding: 3rem 2rem;
+    margin-bottom: 3rem;
+    text-align: center;
+    position: relative;
+}
+
+.project-hero-section::before {
+    display: none;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+.project-gallery-detail {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-main-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.gallery-main-image img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-main-image:hover img {
+    transform: scale(1.1);
+}
+
+.gallery-thumbnails {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.gallery-thumb {
+    height: calc((300px - 1rem) / 2);
+    overflow: hidden;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.gallery-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.gallery-thumb:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Information Sections - Updated with consistent color scheme */
+.info-section {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.info-section:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.section-title-enhanced {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+/* Updated Section Icons - Consistent color scheme */
+.section-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(36, 156, 255, 0.1);
+    color: var(--primary);
+}
+
+.problems-grid, .needs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.problem-card, .need-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.problem-card:hover, .need-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary);
+}
+
+.problem-card::before {
+    content: "⚡";
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.2rem;
+    opacity: 0.7;
+}
+
+.need-card::before {
+    content: "🎯";
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.2rem;
+    opacity: 0.7;
+}
+
+/* Team Section */
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.team-member-enhanced {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--border-radius);
+    padding: 1.8rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.team-member-enhanced:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    border-color: var(--primary);
+}
+
+.member-avatar-enhanced {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.8rem;
+    margin: 0 auto 1rem;
+    border: 3px solid white;
+    box-shadow: 0 5px 15px rgba(36, 156, 255, 0.2);
+    position: relative;
+    z-index: 2;
+}
+
+.member-name-enhanced {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+}
+
+.member-role-enhanced {
+    color: var(--primary);
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.member-contact {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* Contact Information */
+.contact-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.contact-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary);
+}
+
+.contact-card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(36, 156, 255, 0.1);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.2rem;
+}
+
+/* Action Buttons Enhanced - Fixed to bottom of screen */
+.project-actions-enhanced {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    background: transparent; /* Убираем белый фон */
+    backdrop-filter: none; /* Убираем эффект размытия */
+    border-top: none; /* Убираем верхнюю границу */
+    box-shadow: none; /* Убираем тень */
+    z-index: 1000;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.action-btn-enhanced {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem 2rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 180px;
+    justify-content: center;
+}
+
+.btn-invest-enhanced {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(36, 156, 255, 0.3);
+}
+
+.btn-contact-enhanced {
+    background: var(--secondary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(240, 54, 110, 0.3);
+}
+
+.action-btn-enhanced:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn-invest-enhanced:hover {
+    background: #1d7dd8;
+}
+
+.btn-contact-enhanced:hover {
+    background: #d4285a;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .project-gallery-detail {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .gallery-main-image img {
+        height: 200px;
+    }
+    
+    .gallery-thumbnails {
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 0.5rem;
+    }
+    
+    .gallery-thumb {
+        height: 80px;
+        min-width: 120px;
+        border-radius: var(--border-radius);
+    }
+    
+    .problems-grid, .needs-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .project-actions-enhanced {
+        padding: 1rem;
+        gap: 0.5rem;
+    }
+    
+    .action-btn-enhanced {
+        min-width: auto;
+        flex: 1;
+        font-size: 0.9rem;
+        padding: 0.8rem 1rem;
+    }
+    
+    .project-detail-enhanced {
+        padding-bottom: 100px; /* Меньший отступ на мобильных */
+    }
+}
+
 /* Project Detail Page */
 .project-detail {
     max-width: 1000px;

@@ -1432,34 +1432,68 @@
             }
         ];
 
-        // Populate projects grid
+        // Populate projects grid - Updated to use new structure
         function populateProjects() {
             const projectsContainer = document.getElementById('projects-container');
             if (!projectsContainer) return;
             
             projectsContainer.innerHTML = '';
             
-            projectsData.forEach(project => {
-                const projectCard = document.createElement('div');
-                projectCard.className = 'project-card';
-                
-                projectCard.innerHTML = `
-                    <div class="project-img">${project.emoji}</div>
-                    <div class="project-content">
-                        <span class="project-category">${project.category.split('/')[0].trim()}</span>
-                        <h3 class="project-title">${project.title}</h3>
-                        <p class="project-desc">${project.description}</p>
-                        <div class="project-footer">
-                            <div class="project-status">
-                                <span class="status-dot status-${project.status}"></span>
-                                ${project.status === 'active' ? 'Активный' : 'В разработке'}
-                            </div>
-                            <a href="#project-${project.id}" class="project-more" data-project-id="${project.id}">Подробнее</a>
+            // Use the projects from ciaqData instead of old projectsData
+            const projects = window.ciaqData ? ciaqData.projects : [];
+            
+            projects.forEach(project => {
+                // Use the new createProjectCard function if available
+                if (typeof createProjectCard === 'function') {
+                    const projectCard = createProjectCard(project);
+                    projectsContainer.appendChild(projectCard);
+                } else {
+                    // Fallback to basic card if new function not loaded yet
+                    const projectCard = document.createElement('div');
+                    projectCard.className = 'project-card';
+                    projectCard.setAttribute('data-project-id', project.id); // Add project ID to card
+                    
+                    // Use new enhanced structure
+                    const photosHtml = project.photos && project.photos.length > 0 ? 
+                        `<img src="${project.photos[0]}" alt="${project.title}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">` : 
+                        `<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #999; background-color: #f5f5f5;">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 256 256">
+                                 <path d="M208,56H180.28L166.65,35.56A8,8,0,0,0,160,32H96a8,8,0,0,0-6.65,3.56L75.72,56H48A24,24,0,0,0,24,80V192a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V80A24,24,0,0,0,208,56Zm8,136a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V80a8,8,0,0,1,8-8H80a8,8,0,0,0,6.66-3.56L100.28,48h55.44l13.62,20.44A8,8,0,0,0,176,72h32a8,8,0,0,1,8,8ZM128,88a44,44,0,1,0,44,44A44.05,44.05,0,0,0,128,88Zm0,72a28,28,0,1,1,28-28A28,28,0,0,1,128,160Z"></path>
+                             </svg>
+                          </div>`;
+                    
+                    projectCard.innerHTML = `
+                        <div class="project-img-gallery">
+                            ${photosHtml}
+                            <div class="project-category-badge">${project.category}</div>
                         </div>
-                    </div>
-                `;
-                
-                projectsContainer.appendChild(projectCard);
+                        <div class="project-content-enhanced">
+                            <h3 class="project-title-enhanced">${project.title}</h3>
+                            <p class="project-desc-enhanced">${project.description}</p>
+                            
+                            ${project.problems && project.problems.length > 0 ? `
+                                <div class="project-problems-preview">
+                                    <div class="problems-title">Решаемые проблемы</div>
+                                    <div class="problems-list-preview">
+                                        ${project.problems.slice(0, 2).map(problem => 
+                                            `<div class="problem-item-preview">${problem}</div>`
+                                        ).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            <div class="project-footer-enhanced">
+                                <div class="project-status-enhanced">
+                                    <div class="status-dot-enhanced status-${project.status}"></div>
+                                    ${project.statusText}
+                                </div>
+                                <a href="#project/${project.id}" class="project-more-btn" data-project-id="${project.id}">Подробнее</a>
+                            </div>
+                        </div>
+                    `;
+                    
+                    projectsContainer.appendChild(projectCard);
+                }
             });
         }
 
@@ -1899,19 +1933,33 @@
             });
         });
 
-        // Initialize page based on hash
+        // Initialize page based on hash - Updated to use new functions
         function initPage() {
             const hash = window.location.hash || '#home';
             
-            if (hash.startsWith('#project-')) {
-                const projectId = hash.replace('#project-', '');
-                showProjectDetail(projectId);
+            if (hash.startsWith('#project-') || hash.startsWith('#project/')) {
+                const projectId = hash.replace('#project-', '').replace('#project/', '');
+                // Use new renderProjectDetailPage if available
+                if (typeof renderProjectDetailPage === 'function') {
+                    renderProjectDetailPage(projectId);
+                } else if (typeof showProjectDetail === 'function') {
+                    showProjectDetail(projectId);
+                }
             } else if (hash === '#projects') {
-                // Show projects grid (already in HTML)
-                populateProjects();
+                // Use new renderProjectsPage if available
+                if (typeof renderProjectsPage === 'function') {
+                    renderProjectsPage();
+                } else {
+                    // Fallback to populate projects
+                    populateProjects();
+                }
             } else if (hash === '#home') {
-                // Populate featured projects on home page
-                populateProjects();
+                // Use new renderHomePage if available, otherwise populate projects
+                if (typeof renderHomePage === 'function') {
+                    renderHomePage();
+                } else {
+                    populateProjects();
+                }
             }
             
             // Add event listeners for filters
@@ -1943,13 +1991,33 @@
             });
         }
         
-        // Filter projects based on selected filters
+        // Filter projects based on selected filters - Updated to use new structure
         function filterProjects() {
-            const categoryFilter = document.querySelector('.filter-select[data-filter="category"]').value;
-            const statusFilter = document.querySelector('.filter-select[data-filter="status"]').value;
-            const sortFilter = document.querySelector('.filter-select[data-filter="sort"]').value;
+            // Use the new renderProjects function if available from ciaq-interactive.js
+            if (typeof renderProjects === 'function') {
+                // Update app state and call the new render function
+                const categoryFilter = document.querySelector('.filter-select[data-filter="category"]')?.value;
+                const statusFilter = document.querySelector('.filter-select[data-filter="status"]')?.value;
+                const sortFilter = document.querySelector('.filter-select[data-filter="sort"]')?.value;
+                
+                if (window.appState) {
+                    appState.filters.category = categoryFilter || '';
+                    appState.filters.status = statusFilter || '';
+                    appState.filters.sort = sortFilter || '';
+                }
+                
+                renderProjects();
+                return;
+            }
             
-            let filteredProjects = [...projectsData];
+            // Fallback for when new JS not loaded yet
+            const categoryFilter = document.querySelector('.filter-select[data-filter="category"]')?.value;
+            const statusFilter = document.querySelector('.filter-select[data-filter="status"]')?.value;
+            const sortFilter = document.querySelector('.filter-select[data-filter="sort"]')?.value;
+            
+            // Use new data structure
+            const projects = window.ciaqData ? ciaqData.projects : [];
+            let filteredProjects = [...projects];
             
             // Filter by category
             if (categoryFilter) {
@@ -1967,11 +2035,9 @@
             
             // Sort projects
             if (sortFilter === 'newest') {
-                // In a real app, you would sort by date
                 filteredProjects.reverse();
             } else if (sortFilter === 'popular') {
-                // In a real app, you would sort by popularity metrics
-                filteredProjects.sort((a, b) => b.id.localeCompare(a.id));
+                filteredProjects.sort((a, b) => b.id - a.id);
             }
             
             // Update projects display
@@ -1988,26 +2054,44 @@
             }
             
             filteredProjects.forEach(project => {
-                const projectCard = document.createElement('div');
-                projectCard.className = 'project-card';
-                
-                projectCard.innerHTML = `
-                    <div class="project-img">${project.emoji}</div>
-                    <div class="project-content">
-                        <span class="project-category">${project.category.split('/')[0].trim()}</span>
-                        <h3 class="project-title">${project.title}</h3>
-                        <p class="project-desc">${project.description}</p>
-                        <div class="project-footer">
-                            <div class="project-status">
-                                <span class="status-dot status-${project.status}"></span>
-                                ${project.status === 'active' ? 'Активный' : 'В разработке'}
-                            </div>
-                            <a href="#project-${project.id}" class="project-more" data-project-id="${project.id}">Подробнее</a>
+                // Use new createProjectCard function if available
+                if (typeof createProjectCard === 'function') {
+                    const projectCard = createProjectCard(project);
+                    projectsContainer.appendChild(projectCard);
+                } else {
+                    // Fallback to enhanced structure
+                    const projectCard = document.createElement('div');
+                    projectCard.className = 'project-card';
+                    projectCard.setAttribute('data-project-id', project.id); // Add project ID to card
+                    
+                    const photosHtml = project.photos && project.photos.length > 0 ? 
+                        `<img src="${project.photos[0]}" alt="${project.title}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">` : 
+                        `<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #999; background-color: #f5f5f5;">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 256 256">
+                                 <path d="M208,56H180.28L166.65,35.56A8,8,0,0,0,160,32H96a8,8,0,0,0-6.65,3.56L75.72,56H48A24,24,0,0,0,24,80V192a24,24,0,0,0,24-24V80A24,24,0,0,0,208,56Zm8,136a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V80a8,8,0,0,1,8-8H80a8,8,0,0,0,6.66-3.56L100.28,48h55.44l13.62,20.44A8,8,0,0,0,176,72h32a8,8,0,0,1,8,8ZM128,88a44,44,0,1,0,44,44A44.05,44.05,0,0,0,128,88Zm0,72a28,28,0,1,1,28-28A28,28,0,0,1,128,160Z"></path>
+                             </svg>
+                          </div>`;
+                    
+                    projectCard.innerHTML = `
+                        <div class="project-img-gallery">
+                            ${photosHtml}
+                            <div class="project-category-badge">${project.category}</div>
                         </div>
-                    </div>
-                `;
-                
-                projectsContainer.appendChild(projectCard);
+                        <div class="project-content-enhanced">
+                            <h3 class="project-title-enhanced">${project.title}</h3>
+                            <p class="project-desc-enhanced">${project.description}</p>
+                            <div class="project-footer-enhanced">
+                                <div class="project-status-enhanced">
+                                    <div class="status-dot-enhanced status-${project.status}"></div>
+                                    ${project.statusText}
+                                </div>
+                                <a href="#project/${project.id}" class="project-more-btn" data-project-id="${project.id}">Подробнее</a>
+                            </div>
+                        </div>
+                    `;
+                    
+                    projectsContainer.appendChild(projectCard);
+                }
             });
         }
 
@@ -2016,17 +2100,61 @@
         
         // Initialize page on load
         document.addEventListener('DOMContentLoaded', function() {
-            populateProjects();
+            // Use the new renderProjects function if available from ciaq-interactive.js
+            if (typeof renderProjects === 'function') {
+                renderProjects();
+            } else {
+                // Fallback to old populateProjects
+                populateProjects();
+            }
             initPage();
             
-            // Handle project card clicks
+            // Handle project card clicks - Updated to use new function
             document.addEventListener('click', function(e) {
-                const projectMore = e.target.closest('.project-more');
+                // Check for clicks on project cards (anywhere in the card)
+                const projectCard = e.target.closest('.project-card');
+                if (projectCard) {
+                    e.preventDefault();
+                    
+                    // Get project ID from the card or button inside it
+                    let projectId = projectCard.getAttribute('data-project-id');
+                    if (!projectId) {
+                        const moreBtn = projectCard.querySelector('[data-project-id]');
+                        if (moreBtn) {
+                            projectId = moreBtn.getAttribute('data-project-id');
+                        }
+                    }
+                    
+                    if (projectId) {
+                        // Use new renderProjectDetailPage function if available
+                        if (typeof renderProjectDetailPage === 'function') {
+                            renderProjectDetailPage(projectId);
+                        } else {
+                            // Fallback to old function
+                            window.location.hash = `#project-${projectId}`;
+                            if (typeof showProjectDetail === 'function') {
+                                showProjectDetail(projectId);
+                            }
+                        }
+                    }
+                }
+                
+                // Also handle specific button clicks
+                const projectMore = e.target.closest('.project-more-btn');
                 if (projectMore) {
                     e.preventDefault();
-                    const projectId = projectMore.getAttribute('data-project-id') || 'sample';
-                    window.location.hash = `#project-${projectId}`;
-                    showProjectDetail(projectId);
+                    const projectId = projectMore.getAttribute('data-project-id') || '1';
+                    
+                    // Use new renderProjectDetailPage function if available
+                    if (typeof renderProjectDetailPage === 'function') {
+                        renderProjectDetailPage(projectId);
+                    } else {
+                        // Fallback to old function
+                        window.location.hash = `#project-${projectId}`;
+                        if (typeof showProjectDetail === 'function') {
+                            showProjectDetail(projectId);
+                        }
+                    }
                 }
             });
         });

@@ -305,54 +305,157 @@ function renderProjects() {
 function createProjectCard(project) {
     const card = document.createElement('div');
     card.className = 'project-card';
+    card.setAttribute('data-project-id', project.id); // Add project ID for click handling
     
     if (appState.view === 'grid') {
-        card.innerHTML = `
-            <div class="project-img">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                    <line x1="8" y1="21" x2="16" y2="21"></line>
-                    <line x1="12" y1="17" x2="12" y2="21"></line>
+        // Create photo gallery HTML
+        const photosHtml = project.photos && project.photos.length > 0 ? 
+            `<img src="${project.photos[0]}" alt="${project.title}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+             ${project.photos.length > 1 ? `
+                <div class="project-photo-nav">
+                    ${project.photos.map((_, index) => `
+                        <div class="photo-dot ${index === 0 ? 'active' : ''}" data-photo-index="${index}"></div>
+                    `).join('')}
+                </div>` : ''}` : 
+            `<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #999; background-color: #f5f5f5; border-radius: var(--border-radius);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M208,56H180.28L166.65,35.56A8,8,0,0,0,160,32H96a8,8,0,0,0-6.65,3.56L75.72,56H48A24,24,0,0,0,24,80V192a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V80A24,24,0,0,0,208,56Zm8,136a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V80a8,8,0,0,1,8-8H80a8,8,0,0,0,6.66-3.56L100.28,48h55.44l13.62,20.44A8,8,0,0,0,176,72h32a8,8,0,0,1,8,8ZM128,88a44,44,0,1,0,44,44A44.05,44.05,0,0,0,128,88Zm0,72a28,28,0,1,1,28-28A28,28,0,0,1,128,160Z"></path>
                 </svg>
+             </div>`;
+        
+        // Create problems preview HTML  
+        const problemsHtml = project.problems && project.problems.length > 0 ? 
+            `<div class="project-problems-preview">
+                <div class="problems-title">Решаемые проблемы</div>
+                <div class="problems-list-preview">
+                    ${project.problems.slice(0, 2).map(problem => 
+                        `<div class="problem-item-preview">${problem}</div>`
+                    ).join('')}
+                    ${project.problems.length > 2 ? `<div class="problem-item-preview" style="font-style: italic; color: #999;">и еще ${project.problems.length - 2}...</div>` : ''}
+                </div>
+            </div>` : '';
+        
+        card.innerHTML = `
+            <div class="project-img-gallery" data-photos='${JSON.stringify(project.photos || [])}'>
+                ${photosHtml}
+                <div class="project-category-badge">${project.category}</div>
             </div>
-            <div class="project-content">
-                <span class="project-category">${project.category}</span>
-                <h3 class="project-title">${project.title}</h3>
-                <p class="project-desc">${project.description}</p>
-                <div class="project-footer">
-                    <div class="project-status">
-                        <div class="status-dot status-${project.status}"></div>
+            <div class="project-content-enhanced">
+                <h3 class="project-title-enhanced">${project.title}</h3>
+                <p class="project-desc-enhanced">${project.description}</p>
+                
+                ${problemsHtml}
+                
+                <div class="project-footer-enhanced">
+                    <div class="project-status-enhanced">
+                        <div class="status-dot-enhanced status-${project.status}"></div>
                         ${project.statusText}
                     </div>
-                    <a href="#project/${project.id}" class="project-more">Подробнее</a>
+                    <a href="#project/${project.id}" class="project-more-btn" data-project-id="${project.id}">Подробнее</a>
                 </div>
             </div>
         `;
     } else {
+        // List view remains simpler
         card.innerHTML = `
             <div class="project-content list-view">
                 <div class="project-header">
                     <span class="project-category">${project.category}</span>
-                    <div class="project-status">
-                        <div class="status-dot status-${project.status}"></div>
+                    <div class="project-status-enhanced">
+                        <div class="status-dot-enhanced status-${project.status}"></div>
                         ${project.statusText}
                     </div>
                 </div>
                 <h3 class="project-title">${project.title}</h3>
                 <p class="project-desc">${project.description}</p>
-                <a href="#project/${project.id}" class="project-more">Подробнее</a>
+                <a href="#project/${project.id}" class="project-more-btn" data-project-id="${project.id}">Подробнее</a>
             </div>
         `;
     }
     
     // Add click event for the "More details" link
-    const detailsLink = card.querySelector('.project-more');
-    detailsLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        renderProjectDetailPage(project.id);
-    });
+    const detailsLink = card.querySelector('.project-more-btn');
+    if (detailsLink) {
+        detailsLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            renderProjectDetailPage(project.id);
+        });
+    }
+    
+    // Setup photo gallery navigation if in grid view
+    if (appState.view === 'grid' && project.photos && project.photos.length > 1) {
+        setupPhotoGallery(card, project.photos);
+    }
     
     return card;
+}
+
+// Setup photo gallery navigation
+function setupPhotoGallery(card, photos) {
+    const gallery = card.querySelector('.project-img-gallery');
+    const dots = card.querySelectorAll('.photo-dot');
+    let currentIndex = 0;
+    let interval;
+    
+    function showPhoto(index) {
+        const img = gallery.querySelector('img');
+        if (img) {
+            img.style.opacity = '0';
+            setTimeout(() => {
+                img.src = photos[index];
+                img.style.opacity = '1';
+            }, 150);
+        }
+        
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+        });
+        currentIndex = index;
+    }
+    
+    // Auto-cycle through photos
+    function startSlideshow() {
+        interval = setInterval(() => {
+            const nextIndex = (currentIndex + 1) % photos.length;
+            showPhoto(nextIndex);
+        }, 4000);
+    }
+    
+    function stopSlideshow() {
+        if (interval) {
+            clearInterval(interval);
+        }
+    }
+    
+    // Dot navigation
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showPhoto(index);
+            stopSlideshow();
+            startSlideshow();
+        });
+    });
+    
+    // Start slideshow on hover, stop on leave
+    card.addEventListener('mouseenter', startSlideshow);
+    card.addEventListener('mouseleave', stopSlideshow);
+}
+
+// Handle invest button click
+function handleInvestClick(projectId) {
+    const project = ciaqData.projects.find(p => p.id === parseInt(projectId));
+    if (project) {
+        alert(`Инвестирование в проект "${project.title}"\n\nВ реальном приложении здесь была бы форма для инвестирования или переход к соответствующему разделу.`);
+    }
+}
+
+// Handle contact button click  
+function handleContactClick(projectId) {
+    const project = ciaqData.projects.find(p => p.id === parseInt(projectId));
+    if (project && project.contacts) {
+        alert(`Контакты проекта "${project.title}":\n\nEmail: ${project.contacts.email}\nТелефон: ${project.contacts.phone}\nСайт: ${project.contacts.website}\nАдрес: ${project.contacts.address}`);
+    }
 }
 
 // Render project detail page
@@ -365,88 +468,247 @@ function renderProjectDetailPage(projectId) {
         return;
     }
     
+    // Create photo gallery HTML
+    const photosHtml = project.photos && project.photos.length > 0 ? 
+        `<div class="project-gallery-detail">
+            <div class="gallery-main-image">
+                <img src="${project.photos[0]}" alt="${project.title} - фото 1">
+            </div>
+            <div class="gallery-thumbnails">
+                ${project.photos.slice(1, 3).map((photo, index) => 
+                    `<div class="gallery-thumb" onclick="changeMainPhoto('${photo}')">
+                        <img src="${photo}" alt="${project.title} - фото ${index + 2}">
+                    </div>`
+                ).join('')}
+            </div>
+        </div>` : '';
+    
+    // Create problems HTML
+    const problemsHtml = project.problems && project.problems.length > 0 ?
+        `<div class="info-section">
+            <h2 class="section-title-enhanced">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                        <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm-8,56a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm8,104a12,12,0,1,1,12-12A12,12,0,0,1,128,184Z"></path>
+                    </svg>
+                </div>
+                Какие проблемы решает проект
+            </h2>
+            <div class="problems-grid">
+                ${project.problems.map(problem => 
+                    `<div class="problem-card">
+                        <p>${problem}</p>
+                    </div>`
+                ).join('')}
+            </div>
+        </div>` : '';
+    
+    // Create development needs HTML
+    const needsHtml = project.developmentNeeds && project.developmentNeeds.length > 0 ?
+        `<div class="info-section">
+            <h2 class="section-title-enhanced">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                        <path d="M128,16A112,112,0,1,0,240,128,112.13,112.13,0,0,0,128,16Zm0,192a80,80,0,1,1,80-80A80.09,80.09,0,0,1,128,208ZM173.66,90.34a8,8,0,0,1,0,11.32l-40,40a8,8,0,0,1-11.32-11.32l40-40A8,8,0,0,1,173.66,90.34ZM132,128a4,4,0,1,1-4-4A4,4,0,0,1,132,128Z"></path>
+                    </svg>
+                </div>
+                Что необходимо для развития
+            </h2>
+            <div class="needs-grid">
+                ${project.developmentNeeds.map(need => 
+                    `<div class="need-card">
+                        <p>${need}</p>
+                    </div>`
+                ).join('')}
+            </div>
+        </div>` : '';
+    
+    // Create team HTML
+    const teamHtml = project.team && project.team.length > 0 ?
+        `<div class="info-section">
+            <h2 class="section-title-enhanced">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                        <path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.27,98.63a8,8,0,0,1-11.07,2.22A79.71,79.71,0,0,0,168,184a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,54.53,75.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.27,206.63Z"></path>
+                    </svg>
+                </div>
+                Команда проекта
+            </h2>
+            <div class="team-grid">
+                ${project.team.map(member => 
+                    `<div class="team-member-enhanced">
+                        <div class="member-avatar-enhanced">${member.name.charAt(0)}</div>
+                        <div class="member-name-enhanced">${member.name}</div>
+                        <div class="member-role-enhanced">${member.role}</div>
+                        <div class="member-contact">
+                            ${member.contact ? `${member.contact}` : ''}
+                            ${member.phone ? `<br>${member.phone}` : ''}
+                        </div>
+                    </div>`
+                ).join('')}
+            </div>
+        </div>` : '';
+    
+    // Create contacts HTML
+    const contactsHtml = project.contacts ?
+        `<div class="info-section">
+            <h2 class="section-title-enhanced">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                        <path d="M222,48H34A14,14,0,0,0,20,62V194a14,14,0,0,0,14,14H222a14,14,0,0,0,14-14V62A14,14,0,0,0,222,48ZM34,60H222a2,2,0,0,1,2,2V74.2L128,144.89,32,74.2V62A2,2,0,0,1,34,60ZM222,196H34a2,2,0,0,1-2-2V85.05l88.28,64.51a6,6,0,0,0,7.44,0L216,85.05V194A2,2,0,0,1,222,196Z"></path>
+                    </svg>
+                </div>
+                Контакты и связь с проектом
+            </h2>
+            <div class="contact-info-grid">
+                <div class="contact-card">
+                    <div class="contact-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M222,48H34A14,14,0,0,0,20,62V194a14,14,0,0,0,14,14H222a14,14,0,0,0,14-14V62A14,14,0,0,0,222,48ZM34,60H222a2,2,0,0,1,2,2V74.2L128,144.89,32,74.2V62A2,2,0,0,1,34,60ZM222,196H34a2,2,0,0,1-2-2V85.05l88.28,64.51a6,6,0,0,0,7.44,0L216,85.05V194A2,2,0,0,1,222,196Z"></path>
+                        </svg>
+                    </div>
+                    <h3>Email</h3>
+                    <p>${project.contacts.email}</p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M222.37,158.46l-47.11-21.11a16,16,0,0,0-15.17,1.4l-25.15,19.81a117.36,117.36,0,0,1-47.13-47.13l19.81-25.15a16,16,0,0,0,1.4-15.17L87.54,25.63a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,24,72c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.89-46.92A16,16,0,0,0,222.37,158.46Z"></path>
+                        </svg>
+                    </div>
+                    <h3>Телефон</h3>
+                    <p>${project.contacts.phone}</p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M128,64a64,64,0,1,0,64,64A64.07,64.07,0,0,0,128,64Zm0,112a48,48,0,1,1,48-48A48.05,48.05,0,0,1,128,176ZM176,24a8,8,0,0,1,8-8h64a8,8,0,0,1,8,8V88a8,8,0,0,1-16,0V41L96,185a8,8,0,0,1-11.31-11.31L228.69,30H184A8,8,0,0,1,176,24Z"></path>
+                        </svg>
+                    </div>
+                    <h3>Адрес</h3>
+                    <p>${project.contacts.address}</p>
+                </div>
+            </div>
+        </div>` : '';
+    
     dom.mainContainer.innerHTML = `
-        <div class="section project-detail">
+        <div class="section project-detail-enhanced">
             <div class="back-link">
                 <a href="#projects" id="back-to-projects">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M15 18l-6-6 6-6"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 256 256">
+                        <path d="M224,128a8,8,0,0,1-8,8H123.31l34.35,34.34a8,8,0,0,1-11.32,11.32l-48-48a8,8,0,0,1,0-11.32l48-48a8,8,0,0,1,11.32,11.32L123.31,120H216A8,8,0,0,1,224,128Z"></path>
                     </svg>
                     Назад к проектам
                 </a>
             </div>
             
-            <div class="project-header">
-                <div class="project-header-content">
-                    <span class="project-category large">${project.category}</span>
-                    <h1 class="project-title large">${project.title}</h1>
-                    <div class="project-status">
-                        <div class="status-dot status-${project.status}"></div>
-                        ${project.statusText}
+            <!-- 1. Название проекта -->
+            <div class="project-hero-section">
+                <div class="project-header-content" style="position: relative; z-index: 2;">
+                    <span class="project-category large" style="background-color: var(--primary); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1rem; display: inline-block;">${project.category}</span>
+                    <h1 class="project-title large" style="font-size: 2.5rem; margin-bottom: 1rem; line-height: 1.2; color: var(--dark);">${project.title}</h1>
+                    <div class="project-status" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div class="status-dot-enhanced status-${project.status}" style="width: 12px; height: 12px;"></div>
+                        <span style="font-size: 1rem; color: #666;">${project.statusText}</span>
                     </div>
                 </div>
             </div>
             
-            <div class="project-tabs">
-                <button class="tab-btn active" data-tab="info">Информация</button>
-                <button class="tab-btn" data-tab="team">Команда</button>
-                <button class="tab-btn" data-tab="needs">Потребности</button>
-            </div>
+            <!-- 2. Фотографии проекта -->
+            ${photosHtml}
             
-            <div class="tab-content" id="tab-info">
-                <h3>О проекте</h3>
-                <p>${project.fullDescription}</p>
+            <!-- 3. Описание проекта -->
+            <div class="info-section">
+                <h2 class="section-title-enhanced">
+                    <div class="section-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M214.34,86,158,141.66a8,8,0,0,1-11.31,0L122,117a8,8,0,0,1,11.31-11.32L152,124.37l44.69-44.69a8,8,0,1,1,11.31,11.32ZM48,64a8,8,0,0,0-8,8V184a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V72a8,8,0,0,0-8-8Z"></path>
+                        </svg>
+                    </div>
+                    Описание проекта
+                </h2>
+                <p style="font-size: 1.1rem; line-height: 1.7; margin-bottom: 1.5rem;">${project.fullDescription}</p>
                 
-                <h3>Целевая аудитория</h3>
-                <p>${project.targetAudience}</p>
+                <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--dark);">Целевая аудитория</h3>
+                <p style="font-size: 1rem; line-height: 1.6;">${project.targetAudience}</p>
             </div>
             
-            <div class="tab-content hidden" id="tab-team">
-                <h3>Команда проекта</h3>
-                <div class="team-members">
-                    ${project.team.map(member => `
-                        <div class="team-member">
-                            <div class="member-avatar">${member.name.charAt(0)}</div>
-                            <div class="member-info">
-                                <div class="member-name">${member.name}</div>
-                                <div class="member-role">${member.role}</div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
+            <!-- 4. Какие задачи/проблемы решает -->
+            ${problemsHtml}
             
-            <div class="tab-content hidden" id="tab-needs">
-                <h3>Потребности проекта</h3>
-                <p>${project.needs}</p>
-                
-                <div class="project-actions">
-                    <button class="action-btn secondary">Скачать PDF</button>
-                    <button class="action-btn">Связаться с командой</button>
-                </div>
-            </div>
+            <!-- 5. Что необходимо для развития -->
+            ${needsHtml}
+            
+            <!-- 6. Команда проекта -->
+            ${teamHtml}
+            
+            <!-- 7. Контакты и детали для связи -->
+            ${contactsHtml}
+        </div>
+        
+        <!-- Fixed action buttons at bottom of screen -->
+        <div class="project-actions-enhanced">
+            <button class="action-btn-enhanced btn-invest-enhanced" onclick="handleInvestClick(${project.id})">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm-8,56a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm8,104a12,12,0,1,1,12-12A12,12,0,0,1,128,184Z"></path>
+                </svg>
+                Инвестировать в проект
+            </button>
+            <button class="action-btn-enhanced btn-contact-enhanced" onclick="handleContactTeamClick(${project.id})">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M222,48H34A14,14,0,0,0,20,62V194a14,14,0,0,0,14,14H222a14,14,0,0,0,14-14V62A14,14,0,0,0,222,48ZM34,60H222a2,2,0,0,1,2,2V74.2L128,144.89,32,74.2V62A2,2,0,0,1,34,60ZM222,196H34a2,2,0,0,1-2-2V85.05l88.28,64.51a6,6,0,0,0,7.44,0L216,85.05V194A2,2,0,0,1,222,196Z"></path>
+                </svg>
+                Связаться с командой
+            </button>
         </div>
     `;
-    
-    // Set up event listeners for tabs
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.add('hidden');
-            });
-            
-            document.getElementById(`tab-${btn.dataset.tab}`).classList.remove('hidden');
-        });
-    });
     
     // Set up back button
     document.getElementById('back-to-projects').addEventListener('click', (e) => {
         e.preventDefault();
         renderProjectsPage();
     });
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Change main photo in gallery
+function changeMainPhoto(photoUrl) {
+    const mainImg = document.querySelector('.gallery-main-image img');
+    if (mainImg) {
+        mainImg.style.opacity = '0.3';
+        setTimeout(() => {
+            mainImg.src = photoUrl;
+            mainImg.style.opacity = '1';
+        }, 200);
+    }
+}
+
+// Handle contact team button click
+function handleContactTeamClick(projectId) {
+    const project = ciaqData.projects.find(p => p.id === parseInt(projectId));
+    if (project) {
+        let contactInfo = `Связь с командой проекта "${project.title}"\n\n`;
+        
+        if (project.contacts) {
+            contactInfo += `Общий Email: ${project.contacts.email}\n`;
+            contactInfo += `Телефон: ${project.contacts.phone}\n`;
+            contactInfo += `Сайт: ${project.contacts.website}\n\n`;
+        }
+        
+        if (project.team && project.team.length > 0) {
+            contactInfo += `Контакты участников команды:\n\n`;
+            project.team.forEach(member => {
+                contactInfo += `${member.name} (${member.role})\n`;
+                if (member.contact) contactInfo += `   Email: ${member.contact}\n`;
+                if (member.phone) contactInfo += `   Телефон: ${member.phone}\n`;
+                contactInfo += '\n';
+            });
+        }
+        
+        alert(contactInfo);
+    }
 }
 
 // AI Chat functionality
@@ -1129,4 +1391,16 @@ function searchProjects(term) {
 }
 
 // Initialize the application when DOM is fully loaded
-document.addEventListener('DOMContentLoaded', initApp); 
+document.addEventListener('DOMContentLoaded', initApp);
+
+// Make key functions globally available for HTML integration
+window.renderProjectDetailPage = renderProjectDetailPage;
+window.renderProjectsPage = renderProjectsPage;
+window.renderHomePage = renderHomePage;
+window.createProjectCard = createProjectCard;
+window.renderProjects = renderProjects;
+window.handleInvestClick = handleInvestClick;
+window.handleContactClick = handleContactClick;
+window.handleContactTeamClick = handleContactTeamClick;
+window.changeMainPhoto = changeMainPhoto;
+window.navigateTo = navigateTo; 
