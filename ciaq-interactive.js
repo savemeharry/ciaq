@@ -488,8 +488,10 @@ function renderProjectDetailPage(projectId) {
         `<div class="info-section">
             <h2 class="section-title-enhanced">
                 <div class="section-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
-                        <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm-8,56a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm8,104a12,12,0,1,1,12-12A12,12,0,0,1,128,184Z"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
                     </svg>
                 </div>
                 Какие проблемы решает проект
@@ -497,7 +499,7 @@ function renderProjectDetailPage(projectId) {
             <div class="problems-grid">
                 ${project.problems.map(problem => 
                     `<div class="problem-card">
-                        <p>${problem}</p>
+                        <p class="card-text">${problem}</p>
                     </div>`
                 ).join('')}
             </div>
@@ -508,8 +510,10 @@ function renderProjectDetailPage(projectId) {
         `<div class="info-section">
             <h2 class="section-title-enhanced">
                 <div class="section-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
-                        <path d="M128,16A112,112,0,1,0,240,128,112.13,112.13,0,0,0,128,16Zm0,192a80,80,0,1,1,80-80A80.09,80.09,0,0,1,128,208ZM173.66,90.34a8,8,0,0,1,0,11.32l-40,40a8,8,0,0,1-11.32-11.32l40-40A8,8,0,0,1,173.66,90.34ZM132,128a4,4,0,1,1-4-4A4,4,0,0,1,132,128Z"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="6"></circle>
+                        <circle cx="12" cy="12" r="2"></circle>
                     </svg>
                 </div>
                 Что необходимо для развития
@@ -517,7 +521,7 @@ function renderProjectDetailPage(projectId) {
             <div class="needs-grid">
                 ${project.developmentNeeds.map(need => 
                     `<div class="need-card">
-                        <p>${need}</p>
+                        <p class="card-text">${need}</p>
                     </div>`
                 ).join('')}
             </div>
@@ -528,8 +532,9 @@ function renderProjectDetailPage(projectId) {
         `<div class="info-section">
             <h2 class="section-title-enhanced">
                 <div class="section-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
-                        <path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.27,98.63a8,8,0,0,1-11.07,2.22A79.71,79.71,0,0,0,168,184a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,54.53,75.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.27,206.63Z"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                 </div>
                 Команда проекта
@@ -554,40 +559,72 @@ function renderProjectDetailPage(projectId) {
         `<div class="info-section">
             <h2 class="section-title-enhanced">
                 <div class="section-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
-                        <path d="M222,48H34A14,14,0,0,0,20,62V194a14,14,0,0,0,14,14H222a14,14,0,0,0,14-14V62A14,14,0,0,0,222,48ZM34,60H222a2,2,0,0,1,2,2V74.2L128,144.89,32,74.2V62A2,2,0,0,1,34,60ZM222,196H34a2,2,0,0,1-2-2V85.05l88.28,64.51a6,6,0,0,0,7.44,0L216,85.05V194A2,2,0,0,1,222,196Z"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
                     </svg>
                 </div>
                 Контакты и связь с проектом
             </h2>
-            <div class="contact-info-grid">
-                <div class="contact-card">
-                    <div class="contact-card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
-                            <path d="M222,48H34A14,14,0,0,0,20,62V194a14,14,0,0,0,14,14H222a14,14,0,0,0,14-14V62A14,14,0,0,0,222,48ZM34,60H222a2,2,0,0,1,2,2V74.2L128,144.89,32,74.2V62A2,2,0,0,1,34,60ZM222,196H34a2,2,0,0,1-2-2V85.05l88.28,64.51a6,6,0,0,0,7.44,0L216,85.05V194A2,2,0,0,1,222,196Z"></path>
-                        </svg>
+            <div class="contact-info-grid">${project.website ? `
+                    <div class="contact-card">
+                        <div class="contact-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                        </div>
+                        <div class="contact-card-content">
+                            <h4>Веб-сайт</h4>
+                            <p><a href="${project.contacts.website}" target="_blank">${project.contacts.website}</a></p>
+                        </div>
                     </div>
-                    <h3>Email</h3>
-                    <p>${project.contacts.email}</p>
-                </div>
-                <div class="contact-card">
-                    <div class="contact-card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
-                            <path d="M222.37,158.46l-47.11-21.11a16,16,0,0,0-15.17,1.4l-25.15,19.81a117.36,117.36,0,0,1-47.13-47.13l19.81-25.15a16,16,0,0,0,1.4-15.17L87.54,25.63a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,24,72c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.89-46.92A16,16,0,0,0,222.37,158.46Z"></path>
-                        </svg>
+                ` : ''}
+                
+                ${project.contacts.email ? `
+                    <div class="contact-card">
+                        <div class="contact-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </div>
+                        <div class="contact-card-content">
+                            <h4>Email</h4>
+                            <p><a href="mailto:${project.contacts.email}">${project.contacts.email}</a></p>
+                        </div>
                     </div>
-                    <h3>Телефон</h3>
-                    <p>${project.contacts.phone}</p>
-                </div>
-                <div class="contact-card">
-                    <div class="contact-card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
-                            <path d="M128,64a64,64,0,1,0,64,64A64.07,64.07,0,0,0,128,64Zm0,112a48,48,0,1,1,48-48A48.05,48.05,0,0,1,128,176ZM176,24a8,8,0,0,1,8-8h64a8,8,0,0,1,8,8V88a8,8,0,0,1-16,0V41L96,185a8,8,0,0,1-11.31-11.31L228.69,30H184A8,8,0,0,1,176,24Z"></path>
-                        </svg>
+                ` : ''}
+                
+                ${project.contacts.phone ? `
+                    <div class="contact-card">
+                        <div class="contact-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                        </div>
+                        <div class="contact-card-content">
+                            <h4>Телефон</h4>
+                            <p><a href="tel:${project.contacts.phone}">${project.contacts.phone}</a></p>
+                        </div>
                     </div>
-                    <h3>Адрес</h3>
-                    <p>${project.contacts.address}</p>
-                </div>
+                ` : ''}
+                
+                ${project.contacts.address ? `
+                    <div class="contact-card">
+                        <div class="contact-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </div>
+                        <div class="contact-card-content">
+                            <h4>Адрес</h4>
+                            <p>${project.contacts.address}</p>
+                        </div>
+                    </div>
+                ` : ''}
             </div>
         </div>` : '';
     
@@ -621,8 +658,12 @@ function renderProjectDetailPage(projectId) {
             <div class="info-section">
                 <h2 class="section-title-enhanced">
                     <div class="section-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
-                            <path d="M214.34,86,158,141.66a8,8,0,0,1-11.31,0L122,117a8,8,0,0,1,11.31-11.32L152,124.37l44.69-44.69a8,8,0,1,1,11.31,11.32ZM48,64a8,8,0,0,0-8,8V184a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V72a8,8,0,0,0-8-8Z"></path>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                            <polyline points="14,2 14,8 20,8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <line x1="10" y1="9" x2="8" y2="9"></line>
                         </svg>
                     </div>
                     Описание проекта
