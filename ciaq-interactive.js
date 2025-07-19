@@ -468,19 +468,14 @@ function renderProjectDetailPage(projectId) {
         return;
     }
     
-    // Create photo gallery HTML
+    // Create photo gallery HTML - Accordion style
     const photosHtml = project.photos && project.photos.length > 0 ? 
         `<div class="project-gallery-detail">
-            <div class="gallery-main-image">
-                <img src="${project.photos[0]}" alt="${project.title} - фото 1">
-            </div>
-            <div class="gallery-thumbnails">
-                ${project.photos.slice(1, 3).map((photo, index) => 
-                    `<div class="gallery-thumb" onclick="changeMainPhoto('${photo}')">
-                        <img src="${photo}" alt="${project.title} - фото ${index + 2}">
-                    </div>`
-                ).join('')}
-            </div>
+            ${project.photos.slice(0, 3).map((photo, index) => 
+                `<div class="gallery-photo ${index === 0 ? 'active' : ''}" data-photo-index="${index}" onclick="toggleGalleryPhoto(${index})">
+                    <img src="${photo}" alt="${project.title} - фото ${index + 1}">
+                </div>`
+            ).join('')}
         </div>` : '';
     
     // Create problems HTML
@@ -714,15 +709,18 @@ function renderProjectDetailPage(projectId) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Change main photo in gallery
-function changeMainPhoto(photoUrl) {
-    const mainImg = document.querySelector('.gallery-main-image img');
-    if (mainImg) {
-        mainImg.style.opacity = '0.3';
-        setTimeout(() => {
-            mainImg.src = photoUrl;
-            mainImg.style.opacity = '1';
-        }, 200);
+// Toggle gallery photo in accordion style
+function toggleGalleryPhoto(photoIndex) {
+    const galleryPhotos = document.querySelectorAll('.gallery-photo');
+    
+    // Remove active class from all photos
+    galleryPhotos.forEach(photo => {
+        photo.classList.remove('active');
+    });
+    
+    // Add active class to clicked photo
+    if (galleryPhotos[photoIndex]) {
+        galleryPhotos[photoIndex].classList.add('active');
     }
 }
 
@@ -1443,5 +1441,5 @@ window.renderProjects = renderProjects;
 window.handleInvestClick = handleInvestClick;
 window.handleContactClick = handleContactClick;
 window.handleContactTeamClick = handleContactTeamClick;
-window.changeMainPhoto = changeMainPhoto;
+window.toggleGalleryPhoto = toggleGalleryPhoto;
 window.navigateTo = navigateTo; 
